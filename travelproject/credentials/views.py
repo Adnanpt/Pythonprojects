@@ -1,3 +1,5 @@
+from urllib import request
+
 from django.contrib import messages,auth
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
@@ -6,19 +8,18 @@ from django.shortcuts import render
 
 # Create your views here.
 def login(request):
-    return render(request,"login.html")
-         if request.method == 'POST':
-             username = request.POST['username']
-             password = request.POST['password']
-             user=auth.authenticate(username=username,password=password)
+         if request.method=='POST':
+            username = request.POST['username']
+            password = request.POST['password']
+            user=auth.authenticate(username=username,password=password)
 
-         if user is  not None:
-            auth.login(request,user)
-            return redirect('/')
-         else:
-            messages.info(request,"invalid credential")
-            return redirect('login')
-    return render(request,"login.html")
+            if user is  not None:
+                auth.login(request,user)
+                return redirect('/')
+            else:
+                messages.info(request,"invalid credential")
+                return redirect('login')
+         return render (request,"login.html")
 
 
 def register(request,email=None):
@@ -30,7 +31,7 @@ def register(request,email=None):
         email = request.POST['email']
         password = request.POST['password']
         cpassword = request.POST['confirm_password']
-        if password == cpassword:
+        if password==cpassword:
             if User.objects.filter(username=username).exists():
                 messages.info(request,"username taken")
                 return redirect('register')
@@ -38,7 +39,7 @@ def register(request,email=None):
                 messages.info(request,"email taken")
                 return redirect('register')
             else:
-                  user=User.objects.create_user(username = user_name, password = password, firstname =first_name, lastname =last_name, email=email)
+                  user=User.objects.create_user(username = username, password = password, firstname =firstname, lastname =lastname, email=email)
                   user.save();
                   return redirect('login')
 
@@ -46,7 +47,6 @@ def register(request,email=None):
             messages.info(request,"password not matching")
             return redirect('register')
         return redirect('/')
-
     return render(request, "register.html")
 
 def logout(request):
