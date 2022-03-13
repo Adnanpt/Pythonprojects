@@ -1,11 +1,19 @@
 # Create your views here.
 from django.shortcuts import render
-from . models import place
+
+from travelapp.models import place, place1
+
 
 def demo(request):
     obj=place.objects.all()
     #name="india"
     return render(request,"index.html",{'result':obj})
+
+# def demo1(request):
+#     obj = place1.objects.all()
+#     # name="india"
+#     return render(request, "index.html", {'result1': obj})
+
     #{'obj':name})
 #def about(request):
  #   return render(request,"result.html")
